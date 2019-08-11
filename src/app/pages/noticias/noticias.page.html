@@ -1,0 +1,36 @@
+<ion-header no-border>
+  <ion-toolbar color="dark">
+    <ion-title>Noticias Mundiales</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="dark">
+  <ion-item color="dark">
+    <ion-label>País</ion-label>
+    <ion-select placeholder="Seleccione" [(ngModel)]="noticias.pais" okText="Aceptar" cancelText="Cancelar"
+      (ionChange)="consultar(noticias.pais)">
+      <ion-select-option *ngFor="let pais of paises;" value="{{pais.codigo}}">{{pais.nombre}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" size-lg="3" size-md="4" size-sm="6" size-xs="12" *ngFor="let notic of noticia; let i=index;">
+        <ion-card color="dark" class="card_noticia">
+          <ion-card-header>
+
+            <ion-card-subtitle text-center>
+              <ion-badge color="medium">{{notic.source.name}}</ion-badge>
+            </ion-card-subtitle>
+            <ion-card-title>{{notic.title}}</ion-card-title>
+
+          </ion-card-header>
+          <ion-img *ngIf="notic.urlToImage" [src]="notic.urlToImage"></ion-img>
+
+          <ion-card-content>{{notic.description}}</ion-card-content>
+
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
