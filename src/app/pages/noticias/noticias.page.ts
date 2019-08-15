@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoticiasService } from 'src/app/services/noticias.service';
-import { IonList } from '@ionic/angular';
+import { IonList, IonSelect } from '@ionic/angular';
 import { Articulo } from 'src/app/interfaces/interfases';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-noticias',
@@ -10,6 +11,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['./noticias.page.scss'],
 })
 export class NoticiasPage implements OnInit {
+
+  formulario: FormGroup;
 
   paises = [
     {
@@ -226,27 +229,40 @@ export class NoticiasPage implements OnInit {
     }
   ]
 
-  noticia:Articulo[] = [];
+  noticiasPais: Articulo[] = [];
 
-  noticias:object = {
+  noticias: Object = {
     pais: null
   }
 
-  @ViewChild(IonList, { static: false }) list: IonList;
+  @ViewChild(IonSelect, { static: false }) list: IonSelect;
 
-  constructor(private noticiasService: NoticiasService) {
-    
+  constructor(
+    private noticiasService: NoticiasService,
+    private build: FormBuilder,
+    private storage: Storage) {
+
   }
 
   ngOnInit() {
+    this.formulario = this.build.group({
+      pais: [this.paises[10].codigo]
+    })
+    let pais_noticias = this.formulario.value.pais;
+    this.storage.set('Pais',pais_noticias);
+    this.consultar(pais_noticias);
   }
 
-  consultar(noticias){
+  consultar(noticias) {
+    console.log(noticias);
     
     this.noticiasService.getTopHeadlines(noticias).subscribe(
-      resp => {        
-        this.noticia = [];
-        this.noticia.push( ...resp.articles );
+      resp => {
+        console.log(resp);
+        
+        this.noticiasPais = [];
+        this.noticiasPais.push(...resp.articles);
+        
       }
     )
   }
