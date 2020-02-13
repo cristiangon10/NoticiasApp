@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSegment } from '@ionic/angular';
+import { Component, OnInit, ViewChild,  } from '@angular/core';
+import { IonSegment, AlertController } from '@ionic/angular';
 import { NoticiasService } from 'src/app/services/noticias.service';
 import { Articulo } from 'src/app/interfaces/interfases';
 import { Storage } from '@ionic/storage';
@@ -13,7 +13,7 @@ export class CategoriasPage implements OnInit {
 
   @ViewChild(IonSegment, { static: true }) segment: IonSegment;
 
-  categorias:Array<any> = [
+  categorias: Array<any> = [
     {
       valor: 'bussines',
       texto: 'Negocios'
@@ -44,36 +44,50 @@ export class CategoriasPage implements OnInit {
     }
   ]
 
-  noticiasPais:Articulo[] = [];
-  
-  constructor( 
-    private noticiasService:NoticiasService,
-    private storage: Storage) { }
+  noticiasPais: Articulo[] = [];
+  pais = '';
 
-  ngOnInit() {       
+  constructor(
+    private noticiasService: NoticiasService,
+    private storage: Storage,
+    private alertController: AlertController) { }
+
+  ngOnInit() {
     this.segment.value = this.categorias[0].valor;
-    this.noticiasService.getTopHeadlinesCategorias(this.categorias[5].valor, 'co')
-      .subscribe( resp => {
-        this.noticiasPais = [];
-        this.noticiasPais.push( ...resp.articles );
-      })
-
-    this.storage.get('Pais').then((val) => {
-      console.log('Lo que llego a categorias como pais fue:' + val);
-      
-    })
+    this.seleccionarPaisGlobal(this.segment.value);
   }
 
-  // segmentChanged(event){
+  cambioCategoria(event) {
+    this.cargarNoticias(event.detail.value, this.pais);
+  }
 
-  //   let seleccion = event.detail.value;
-  //   this.segment.value = seleccion;
-  //   this.noticiasService.getTopHeadlinesCategorias(seleccion, 'co')
-  //     .subscribe( resp => {
-  //       this.noticiasPais = [];
-  //       this.noticiasPais.push( ...resp.articles );
-  //       console.log(resp.articles);
-        
-  //     })    
-  // }
+  seleccionarPaisGlobal(categoria:string){
+    this.storage.get('Pais').then((val) => {     
+      this.cargarNoticias(categoria, val);      
+     });    
+  }
+
+  cargarNoticias(categoria:string, pais:string) {   
+    this.pais = pais;         
+    this.noticiasService.getTopHeadlinesCategorias(categoria, pais)
+      .subscribe(resp => {        
+        if (resp.articles.length > 0) {
+          this.noticiasPais = [];
+          this.noticiasPais.push(...resp.articles);
+        } else {
+          this.noticiasPais = [];
+          this.alertNoticiasVacias();
+        }
+      })
+  }
+
+  async alertNoticiasVacias() {
+    const alert = await this.alertController.create({
+      header: 'Lo Sentimos...',
+      message: 'No se encotraron noticias o no estan disponibles.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
 }

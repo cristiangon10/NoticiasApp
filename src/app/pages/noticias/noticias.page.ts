@@ -253,16 +253,13 @@ export class NoticiasPage implements OnInit {
     this.consultar(pais_noticias);
   }
 
-  consultar(noticias) {
-    console.log(noticias);
-    
+  consultar(noticias) {   
+    let pais_noticias = this.formulario.value.pais;
+    this.storage.set('Pais',pais_noticias); 
     this.noticiasService.getTopHeadlines(noticias).subscribe(
-      resp => {
-        console.log(resp);
-        
+      resp => {       
         this.noticiasPais = [];
         this.noticiasPais.push(...resp.articles);
-        
       }
     )
   }
