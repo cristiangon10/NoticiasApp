@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild,  } from '@angular/core';
-import { IonSegment, AlertController } from '@ionic/angular';
+import { Component, OnInit, ViewChild, } from '@angular/core';
+import { IonSegment, AlertController, IonContent } from '@ionic/angular';
 import { NoticiasService } from 'src/app/services/noticias.service';
 import { Articulo } from 'src/app/interfaces/interfases';
 import { Storage } from '@ionic/storage';
@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 export class CategoriasPage implements OnInit {
 
   @ViewChild(IonSegment, { static: true }) segment: IonSegment;
+  @ViewChild(IonContent, { static: false }) contenido: IonContent;
 
   categorias: Array<any> = [
     {
@@ -57,23 +58,29 @@ export class CategoriasPage implements OnInit {
     this.seleccionarPaisGlobal(this.segment.value);
   }
 
+  ionViewWillEnter(): void {
+    this.segment.value = this.categorias[0].valor;
+    this.seleccionarPaisGlobal(this.segment.value);
+  }
+
   cambioCategoria(event) {
     this.cargarNoticias(event.detail.value, this.pais);
+    this.contenido.scrollToTop(500);
   }
 
-  seleccionarPaisGlobal(categoria:string){
-    this.storage.get('Pais').then((val) => {     
-      this.cargarNoticias(categoria, val);      
-     });    
+  seleccionarPaisGlobal(categoria: string) {
+    this.storage.get('Pais').then((val) => {
+      this.cargarNoticias(categoria, val);
+    });
   }
 
-  cargarNoticias(categoria:string, pais:string) {   
-    this.pais = pais;         
+  cargarNoticias(categoria: string, pais: string) {
+    this.pais = pais;
     this.noticiasService.getTopHeadlinesCategorias(categoria, pais)
-      .subscribe(resp => {        
+      .subscribe(resp => {
         if (resp.articles.length > 0) {
           this.noticiasPais = [];
-          this.noticiasPais.push(...resp.articles);
+          this.noticiasPais.push(...resp.articles); 
         } else {
           this.noticiasPais = [];
           this.alertNoticiasVacias();

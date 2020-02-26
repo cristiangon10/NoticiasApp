@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NoticiasService } from 'src/app/services/noticias.service';
-import { IonList, IonSelect } from '@ionic/angular';
+import { IonList, IonSelect, IonContent, IonInfiniteScroll } from '@ionic/angular';
 import { Articulo } from 'src/app/interfaces/interfases';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -227,7 +227,7 @@ export class NoticiasPage implements OnInit {
       nombre: 'Sudafrica',
       codigo: 'za'
     }
-  ]
+  ];
 
   noticiasPais: Articulo[] = [];
 
@@ -236,6 +236,8 @@ export class NoticiasPage implements OnInit {
   }
 
   @ViewChild(IonSelect, { static: false }) list: IonSelect;
+  @ViewChild(IonContent, { static: false }) content: IonContent;
+  @ViewChild(IonInfiniteScroll, { static: false }) scroll: IonInfiniteScroll;
 
   constructor(
     private noticiasService: NoticiasService,
@@ -245,21 +247,70 @@ export class NoticiasPage implements OnInit {
   }
 
   ngOnInit() {
+    this.seleccionarPaisParaConsulta();
+    this.ordenarPaises(this.paises, 'nombre');
+  }
+
+  ionViewWillEnter() {
+    this.seleccionarPaisParaConsulta();
+    this.content.scrollToTop(500);
+  }
+
+  seleccionarPaisParaConsulta() {
     this.formulario = this.build.group({
       pais: [this.paises[10].codigo]
     })
     let pais_noticias = this.formulario.value.pais;
-    this.storage.set('Pais',pais_noticias);
+    this.storage.set('Pais', pais_noticias);
     this.consultar(pais_noticias);
   }
 
-  consultar(noticias) {   
+  ordenarPaises(paises, param) {
+    paises.sort(function (a, b) {
+      if (a[param] < b[param]) {
+        return -1
+      } else {
+        return 1
+      }
+    });
+  }
+
+  cargarData(event) {
+    console.log(event);
+    // console.log('Se disparo el consultar por pagina' + event);
+    // this.consultarPorPagina( event);
+  }
+
+  consultar(noticias?) {
     let pais_noticias = this.formulario.value.pais;
-    this.storage.set('Pais',pais_noticias); 
-    this.noticiasService.getTopHeadlines(noticias).subscribe(
-      resp => {       
+    this.storage.set('Pais', pais_noticias);
+    var paisConsulta = '';
+
+    if (noticias) {
+      paisConsulta = noticias;
+    } else {
+      paisConsulta = pais_noticias;
+    }
+
+    this.noticiasService.getTopHeadlines(paisConsulta).subscribe(
+      resp => {
+        console.log(resp);
         this.noticiasPais = [];
         this.noticiasPais.push(...resp.articles);
+      }
+    )
+  }
+
+  consultarPorPagina(event) {
+    
+    this.noticiasService.getNoticiasPorPagina('co').subscribe(
+      resp => {
+        console.log(resp);
+        this.noticiasPais = [];
+        this.noticiasPais.push(...resp.articles);
+        if (event) {
+          event.target.complete();
+        }
       }
     )
   }

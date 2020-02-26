@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="dark">
+<ion-content color="dark" #content>
   <form [formGroup]="formulario">
     <ion-item color="dark">
       <ion-label>País</ion-label>
@@ -15,5 +15,13 @@
   </form>
 
   <app-noticias-comp [noticiasXPais]="noticiasPais"></app-noticias-comp>
+
+  <ion-infinite-scroll  threshold="100px" [disabled]="true" 
+                        position="bottom" (ionInfinite)="cargarData($event)">
+
+    <ion-infinite-scroll-content  loadingSpinner="bubbles" 
+                                  loadingText="Cargando noticias...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>
