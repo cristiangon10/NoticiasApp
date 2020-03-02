@@ -1,0 +1,14 @@
+.card_noticia{
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px 1px rgb(68, 68, 68);
+}
+
+.card_noticia:hover {
+    background: rgba($color: rgb(73, 73, 73), $alpha: 0.4);
+}
+
+.noticia-option {
+    position: absolute;
+    right: -10px;
+    top: -18px;
+}
