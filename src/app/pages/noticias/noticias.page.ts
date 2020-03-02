@@ -252,7 +252,7 @@ export class NoticiasPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.seleccionarPaisParaConsulta();
+    this.consultar();
     this.content.scrollToTop(500);
   }
 
@@ -263,6 +263,7 @@ export class NoticiasPage implements OnInit {
     let pais_noticias = this.formulario.value.pais;
     this.storage.set('Pais', pais_noticias);
     this.consultar(pais_noticias);
+    this.content.scrollToTop(500);
   }
 
   ordenarPaises(paises, param) {
@@ -275,17 +276,16 @@ export class NoticiasPage implements OnInit {
     });
   }
 
-  cargarData(event) {
-    console.log(event);
-    // console.log('Se disparo el consultar por pagina' + event);
-    // this.consultarPorPagina( event);
+  loadData(event) {
+    setTimeout(() => {
+      this.consultarPorPagina(event);
+    }, 2000);
   }
 
   consultar(noticias?) {
     let pais_noticias = this.formulario.value.pais;
     this.storage.set('Pais', pais_noticias);
     var paisConsulta = '';
-
     if (noticias) {
       paisConsulta = noticias;
     } else {
@@ -293,21 +293,24 @@ export class NoticiasPage implements OnInit {
     }
 
     this.noticiasService.getTopHeadlines(paisConsulta).subscribe(
-      resp => {
-        console.log(resp);
+      resp => {        
         this.noticiasPais = [];
         this.noticiasPais.push(...resp.articles);
+        this.scroll.disabled = false;
       }
     )
   }
 
   consultarPorPagina(event) {
-    
-    this.noticiasService.getNoticiasPorPagina('co').subscribe(
-      resp => {
-        console.log(resp);
-        this.noticiasPais = [];
+    let pais_noticias = this.formulario.value.pais;    
+    this.noticiasService.getNoticiasPorPagina(pais_noticias).subscribe(
+      resp => {        
+        if (resp.articles.length <= 0) {  
+          this.scroll.disabled = true;
+        }
+
         this.noticiasPais.push(...resp.articles);
+
         if (event) {
           event.target.complete();
         }

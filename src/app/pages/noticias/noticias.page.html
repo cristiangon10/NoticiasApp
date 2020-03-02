@@ -8,19 +8,18 @@
   <form [formGroup]="formulario">
     <ion-item color="dark">
       <ion-label>País</ion-label>
-      <ion-select placeholder="Seleccione" formControlName="pais" okText="Aceptar" cancelText="Cancelar" (ionChange)="consultar(this.formulario.value.pais)">
+      <ion-select placeholder="Seleccione" formControlName="pais" okText="Aceptar" cancelText="Cancelar"
+        (ionChange)="consultar(this.formulario.value.pais)">
         <ion-select-option *ngFor="let pais of paises;" [value]="pais.codigo">{{pais.nombre}}</ion-select-option>
       </ion-select>
     </ion-item>
   </form>
+  <div class="content-noticias">
+    <app-noticias-comp [noticiasXPais]="noticiasPais"></app-noticias-comp>
+  </div>
 
-  <app-noticias-comp [noticiasXPais]="noticiasPais"></app-noticias-comp>
-
-  <ion-infinite-scroll  threshold="100px" [disabled]="true" 
-                        position="bottom" (ionInfinite)="cargarData($event)">
-
-    <ion-infinite-scroll-content  loadingSpinner="bubbles" 
-                                  loadingText="Cargando noticias...">
+  <ion-infinite-scroll threshold="40px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando..." class="scroll">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
