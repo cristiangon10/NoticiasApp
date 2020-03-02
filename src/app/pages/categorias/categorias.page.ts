@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, } from '@angular/core';
-import { IonSegment, AlertController, IonContent } from '@ionic/angular';
+import { IonSegment, AlertController, IonContent, IonInfiniteScroll } from '@ionic/angular';
 import { NoticiasService } from 'src/app/services/noticias.service';
 import { Articulo } from 'src/app/interfaces/interfases';
 import { Storage } from '@ionic/storage';
@@ -13,6 +13,7 @@ export class CategoriasPage implements OnInit {
 
   @ViewChild(IonSegment, { static: true }) segment: IonSegment;
   @ViewChild(IonContent, { static: false }) contenido: IonContent;
+  @ViewChild(IonInfiniteScroll, { static: false }) scroll: IonInfiniteScroll;
 
   categorias: Array<any> = [
     {
@@ -47,6 +48,7 @@ export class CategoriasPage implements OnInit {
 
   noticiasPais: Articulo[] = [];
   pais = '';
+  bandera = false;
 
   constructor(
     private noticiasService: NoticiasService,
@@ -66,6 +68,7 @@ export class CategoriasPage implements OnInit {
   cambioCategoria(event) {
     this.cargarNoticias(event.detail.value, this.pais);
     this.contenido.scrollToTop(500);
+    this.bandera = false;
   }
 
   seleccionarPaisGlobal(categoria: string) {
@@ -80,10 +83,15 @@ export class CategoriasPage implements OnInit {
       .subscribe(resp => {
         if (resp.articles.length > 0) {
           this.noticiasPais = [];
-          this.noticiasPais.push(...resp.articles); 
+          this.noticiasPais.push(...resp.articles);
+          this.scroll.disabled = false;
         } else {
-          this.noticiasPais = [];
-          this.alertNoticiasVacias();
+          if (!this.bandera) {
+            this.scroll.disabled = true;
+            this.bandera = true;
+            this.noticiasPais = [];
+            this.alertNoticiasVacias();
+          }
         }
       })
   }
@@ -96,5 +104,27 @@ export class CategoriasPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  loadData(event) {
+    setTimeout(() => {
+      this.cargarNoticiaPorPagina(event);
+    }, 2000);
+  }
+
+  cargarNoticiaPorPagina(event) {
+    this.noticiasService.getTopHeadlinesCategoriasPages().subscribe(resp => {
+      
+      if (resp.articles.length > 0) {
+        this.noticiasPais.push(...resp.articles);
+      }
+      if (resp.articles.length <= 0) {  
+        this.scroll.disabled = true;
+      }
+      if (event) {
+        event.target.complete();
+      }
+
+    })
   }
 }
