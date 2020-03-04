@@ -33,3 +33,93 @@
 .action-dark ion-icon{ 
     color: white !important;
 }
+
+// .colorLoadingText .infinite-loading-text {
+//     color: white !important;
+// }
+
+@media(min-width: 360px ) and (max-width: 450px ) {
+    .content_scroll{
+        width: min-content !important;
+        height: min-content !important;
+        margin-left: 40% !important;
+    }
+}
+
+@media(min-width: 700px ) and (max-width: 900px ) {
+    .content_scroll{
+        width: min-content !important;
+        height: min-content !important;
+        margin-left: 45% !important;
+    }
+}
+
+@media(min-width: 1000px ) and (max-width: 1400px ) {
+    .content_scroll{
+        width: min-content !important;
+        height: min-content !important;
+        margin-left: 45% !important;
+    }
+}
+
+@media(orientation: landscape) {
+    .content_scroll{
+        width: min-content !important;
+        height: min-content !important;
+        margin-left: 45% !important;
+    }
+
+    .noticia-option {
+        position: absolute;
+        right: -10px;
+        top: -18px;
+    }
+}
+
+.text-scroll{
+    color: white !important;
+    margin-top: -2.3em;
+    margin-left: 1em;
+}
+
+.tab-selected{
+    color: var( --ion-color-primary ) !important;
+    background-color: rgba(61, 61, 61, 0.445);
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+  }
+
+  .animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  .animated.fast {
+    -webkit-animation-duration: 1000ms;
+    animation-duration: 1000ms;
+  }

@@ -16,9 +16,12 @@
 
   <app-noticias-comp [noticiasXPais]="noticiasPais"></app-noticias-comp>
 
-  <ion-infinite-scroll threshold="40px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando..." class="scroll">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  <div class="content_scroll">
+    <ion-infinite-scroll threshold="40px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="" class="scroll">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <h6 class="text-scroll">Cargando...</h6>
+  </div>
 
 </ion-content>

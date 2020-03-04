@@ -1,9 +1,11 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>favoritos</ion-title>
+<ion-header no-border>
+  <ion-toolbar color="dark">
+    <ion-title text-center>Favoritos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content color="dark">
+  <div class="content-noticias">
+    <app-noticias-comp [noticiasXPais]="dataLocalService.arrayNoticias" [esFavorito]="true"></app-noticias-comp>
+  </div>
 </ion-content>

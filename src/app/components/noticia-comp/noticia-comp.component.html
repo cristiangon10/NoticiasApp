@@ -1,18 +1,18 @@
-<ion-card color="dark" class="card_noticia">
+<ion-card color="dark" class="card_noticia" class="fadeIn animated fast">
   <ion-card-header>
 
     <ion-card-subtitle text-center>
-      <ion-badge color="medium">{{noticia.source.name}}</ion-badge>
+      <ion-badge color="medium" class="badge-noticia">{{noticia.source.name}}</ion-badge>
       <div class="noticia-option">
         <ion-button fill="clear" (click)="abrirMenu()">
           <ion-icon slot="icon-only" ios="ios-more" md="md-more"></ion-icon>         
         </ion-button>
       </div>
     </ion-card-subtitle>
-    <ion-card-title (click)="abrirNoticia()" >{{noticia.title}}</ion-card-title>
+    <ion-card-title (click)="abrirNoticia()" class="fadeInUp animated fast">{{noticia.title}}</ion-card-title>
 
   </ion-card-header>
-  <ion-img *ngIf="noticia.urlToImage" [src]="noticia.urlToImage" (click)="abrirNoticia()"></ion-img>
+  <ion-img *ngIf="noticia.urlToImage" class="fadeInUp animated fast" [src]="noticia.urlToImage" (click)="abrirNoticia()"></ion-img>
 
   <ion-card-content>{{noticia.description}}</ion-card-content>
 

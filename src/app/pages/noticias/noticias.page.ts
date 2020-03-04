@@ -263,7 +263,6 @@ export class NoticiasPage implements OnInit {
     let pais_noticias = this.formulario.value.pais;
     this.storage.set('Pais', pais_noticias);
     this.consultar(pais_noticias);
-    this.content.scrollToTop(500);
   }
 
   ordenarPaises(paises, param) {
@@ -279,7 +278,7 @@ export class NoticiasPage implements OnInit {
   loadData(event) {
     setTimeout(() => {
       this.consultarPorPagina(event);
-    }, 2000);
+    }, 1800);
   }
 
   consultar(noticias?) {
@@ -293,7 +292,8 @@ export class NoticiasPage implements OnInit {
     }
 
     this.noticiasService.getTopHeadlines(paisConsulta).subscribe(
-      resp => {        
+      resp => {      
+        this.content.scrollToTop(500);  
         this.noticiasPais = [];
         this.noticiasPais.push(...resp.articles);
         this.scroll.disabled = false;

@@ -13,6 +13,7 @@ import { DataLocalService } from '../../services/data-local.service';
 export class NoticiaCompComponent implements OnInit {
 
   @Input() noticia: Articulo;
+  @Input() esFavorito: Boolean;
 
   constructor(
     private iab: InAppBrowser,
@@ -22,13 +23,36 @@ export class NoticiaCompComponent implements OnInit {
     private dataLocal: DataLocalService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   abrirNoticia() {
     const browser = this.iab.create(this.noticia.url);
   }
 
   async abrirMenu() {
+    let btnFavorito;
+    if (this.esFavorito) {
+      btnFavorito = {
+        text: 'Eliminar Favorito',
+        icon: 'trash',
+        cssClass: 'action-dark',
+        handler: () => {
+          this.dataLocal.borrarNoticia(this.noticia);
+        }
+      }
+    } else {
+      btnFavorito = {
+        text: 'Favorito',
+        icon: 'star',
+        cssClass: 'action-dark',
+        handler: () => {
+          this.dataLocal.guardarNoticia(this.noticia);
+        }
+      };
+    }
+
+
     const actionSheet = await this.actionSheetController.create({
       header: 'Opciones',
       buttons: [
@@ -44,14 +68,8 @@ export class NoticiaCompComponent implements OnInit {
               this.noticia.url
             )
           }
-        }, {
-          text: 'Favorito',
-          icon: 'star',
-          cssClass: 'action-dark',
-          handler: () => {
-            this.dataLocal.guardarNoticia(this.noticia);
-          }
-        },
+        }, 
+        btnFavorito,
         {
           text: 'Cerrar',
           icon: 'close',
